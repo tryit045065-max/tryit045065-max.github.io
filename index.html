@@ -1,33 +1,1201 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的第一個網站</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 720px;
-      margin: 60px auto;
-      padding: 20px;
-      line-height: 1.8;
-    }
-    h1 {
-      font-size: 32px;
-    }
-    .box {
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      margin-top: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Booking Studio — 美業預約空檔管理</title>
+<meta name="description" content="美業預約空檔管理系統，支援 IG Story 匯出">
+<meta name="theme-color" content="#f4f2ee">
+<meta property="og:title" content="Booking Studio">
+<meta property="og:description" content="美業預約空檔管理系統">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;600&family=Bebas+Neue&family=LXGW+WenKai+TC&family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+<style>
+/* ── THEMES ──────────────────────────────────── */
+:root{
+  --bg:#f4f2ee;--sur:#fff;--sur2:#ece9e3;--bd:#dedad3;
+  --t1:#18150f;--t2:#6a6358;--tm:#a8a09a;
+  --ac:#18150f;--acfg:#f4f2ee;
+  --op-bg:#edf3ee;--op-bd:#b4d0bc;--op-tx:#2a6040;
+  --bk-bg:#faf0ee;--bk-bd:#ddbdb4;--bk-tx:#9a3c2a;
+  --off-bg:#f0eee8;--off-bd:#d4cfc8;--off-tx:#a8a09a;
+}
+[data-theme="noir"]{--bg:#0e0d0c;--sur:#191816;--sur2:#211f1d;--bd:#2a2826;--t1:#edebe7;--t2:#7a7268;--tm:#46423e;--ac:#c4a668;--acfg:#0e0d0c;--op-bg:#142018;--op-bd:#264834;--op-tx:#64a878;--bk-bg:#1e1412;--bk-bd:#42261c;--bk-tx:#cc7860;--off-bg:#161412;--off-bd:#28241e;--off-tx:#3e3a36;}
+[data-theme="slate"]{--bg:#191f2c;--sur:#202838;--sur2:#161d2c;--bd:#2a3450;--t1:#e0e6f4;--t2:#6878a0;--tm:#38486a;--ac:#74aeca;--acfg:#191f2c;--op-bg:#162630;--op-bd:#264858;--op-tx:#74aeca;--bk-bg:#261c30;--bk-bd:#422858;--bk-tx:#b496cc;--off-bg:#141a26;--off-bd:#222c44;--off-tx:#303c58;}
+[data-theme="sage"]{--bg:#e4ebe4;--sur:#eff3ef;--sur2:#dce5dc;--bd:#c0cec0;--t1:#1a281a;--t2:#4c6050;--tm:#84988a;--ac:#265836;--acfg:#eff3ef;--op-bg:#d6ecdc;--op-bd:#94c4a4;--op-tx:#265836;--bk-bg:#f2ece8;--bk-bd:#caaa98;--bk-tx:#783020;--off-bg:#dce4dc;--off-bd:#b4c4b8;--off-tx:#7a9280;}
+[data-theme="sand"]{--bg:#f4eede;--sur:#fdf8f0;--sur2:#ebe3d2;--bd:#daccb4;--t1:#241c0c;--t2:#745e44;--tm:#a89478;--ac:#845c18;--acfg:#fdf8f0;--op-bg:#e6f0e0;--op-bd:#acc8a0;--op-tx:#346030;--bk-bg:#f6ece0;--bk-bd:#d4ae94;--bk-tx:#8a3e28;--off-bg:#ece5d8;--off-bd:#cfc0a4;--off-tx:#9e8c72;}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{font-size:13px;-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--t1);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100dvh;overflow-x:hidden;transition:background .25s,color .25s;}
+
+/* ── TOPBAR ─────────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--bd);padding:11px 15px 9px;display:flex;align-items:center;justify-content:space-between;transition:background .25s,border-color .25s;gap:8px;}
+.settings-btn{width:32px;height:32px;border-radius:7px;border:1px solid var(--bd);background:var(--sur);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .2s;font-size:14px;}
+.settings-btn:active{background:var(--sur2);}
+.brand-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;color:var(--t1);transition:color .25s;line-height:1;}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.theme-dots{display:flex;gap:5px;align-items:center;}
+.theme-dot{width:14px;height:14px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .18s,border-color .18s;flex-shrink:0;}
+.theme-dot.active{border-color:var(--t1);transform:scale(1.2);}
+.dot-light{background:#f4f2ee;box-shadow:0 0 0 1px #ccc;}
+.dot-noir{background:#0e0d0c;box-shadow:0 0 0 1px #444;}
+.dot-slate{background:#191f2c;box-shadow:0 0 0 1px #3a4a68;}
+.dot-sage{background:#e4ebe4;box-shadow:0 0 0 1px #98b098;}
+.dot-sand{background:#f4eede;box-shadow:0 0 0 1px #c8b088;}
+.week-nav{display:flex;align-items:center;border:1px solid var(--bd);border-radius:6px;overflow:hidden;transition:border-color .25s;}
+.wnav-btn{background:var(--sur);border:none;color:var(--t2);width:28px;height:28px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.wnav-btn:active{background:var(--sur2);}
+.week-label{font-size:10px;letter-spacing:1px;color:var(--t2);background:var(--sur);height:28px;min-width:94px;display:flex;align-items:center;justify-content:center;border-left:1px solid var(--bd);border-right:1px solid var(--bd);transition:background .25s,border-color .25s,color .25s;}
+
+/* ── DRAWER ─────────────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:199;opacity:0;pointer-events:none;transition:opacity .28s;}
+.drawer-overlay.show{opacity:1;pointer-events:all;}
+.settings-drawer{position:fixed;top:0;left:0;bottom:0;width:min(300px,86vw);background:var(--sur);border-right:1px solid var(--bd);z-index:200;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1),background .25s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);}
+.settings-drawer.open{transform:translateX(0);}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid var(--bd);}
+.drawer-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:var(--t1);}
+.drawer-close{width:26px;height:26px;border-radius:50%;border:1px solid var(--bd);background:transparent;color:var(--t2);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.drawer-close:active{background:var(--sur2);}
+.drawer-body{flex:1;overflow-y:auto;padding:16px;}
+.drawer-section{margin-bottom:22px;}
+.ds-title{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--tm);margin-bottom:10px;}
+.seg-ctrl{display:flex;border:1px solid var(--bd);border-radius:7px;overflow:hidden;}
+.seg-opt{flex:1;height:32px;border:none;background:transparent;color:var(--t2);font-family:'Noto Sans TC',sans-serif;font-size:10px;letter-spacing:.5px;cursor:pointer;transition:background .18s,color .18s;display:flex;align-items:center;justify-content:center;}
+.seg-opt+.seg-opt{border-left:1px solid var(--bd);}
+.seg-opt.active{background:var(--ac);color:var(--acfg);}
+.time-list{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.time-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:5px;border:1px solid var(--bd);background:var(--sur2);}
+.time-row-label{font-size:11px;letter-spacing:.5px;color:var(--t1);font-variant-numeric:tabular-nums;}
+.time-row-del{width:20px;height:20px;border-radius:4px;border:1px solid var(--bd);background:transparent;color:var(--tm);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.time-row-del:active{background:var(--bk-bg);}
+.add-time-row{display:flex;gap:7px;margin-top:7px;}
+.time-input{flex:1;height:32px;border:1px solid var(--bd);border-radius:5px;background:var(--sur);color:var(--t1);font-family:'Noto Sans TC',sans-serif;font-size:11px;padding:0 9px;outline:none;-webkit-appearance:none;}
+.time-input:focus{border-color:var(--ac);}
+.add-btn{height:32px;padding:0 12px;border-radius:5px;border:none;background:var(--ac);color:var(--acfg);font-size:10px;font-family:'Noto Sans TC',sans-serif;letter-spacing:1px;cursor:pointer;}
+.add-btn:active{opacity:.75;}
+.day-toggles{display:flex;flex-direction:column;gap:5px;}
+.day-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:5px;border:1px solid var(--bd);background:var(--sur2);cursor:pointer;}
+.day-toggle-row:active{background:var(--bd);}
+.day-toggle-label{font-size:10px;letter-spacing:1.5px;color:var(--t1);text-transform:uppercase;}
+.day-toggle-switch{width:36px;height:20px;border-radius:10px;background:var(--bd);position:relative;transition:background .2s;flex-shrink:0;}
+.day-toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s;}
+.day-toggle-row.on .day-toggle-switch{background:var(--ac);}
+.day-toggle-row.on .day-toggle-switch::after{transform:translateX(16px);}
+
+/* ── MAIN ───────────────────────────────────── */
+.main{padding:0 0 110px;}
+.day-section{border-bottom:1px solid var(--bd);transition:border-color .25s;}
+.day-section.day-off{opacity:.4;}
+.day-header-row{padding:12px 15px 6px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;-webkit-user-select:none;}
+.day-num{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--t1);line-height:1;transition:color .25s;}
+.day-section.day-today .day-num{color:var(--ac);}
+.day-name{font-size:9px;letter-spacing:2.5px;color:var(--tm);text-transform:uppercase;}
+.day-section.day-today .day-name{color:var(--ac);opacity:.6;}
+.day-badge{margin-left:auto;font-size:9px;letter-spacing:1px;padding:3px 7px;border-radius:3px;}
+.day-badge.has-open{background:var(--op-bg);color:var(--op-tx);border:1px solid var(--op-bd);}
+.day-badge.full{background:var(--bk-bg);color:var(--bk-tx);border:1px solid var(--bk-bd);}
+.day-badge.off{background:var(--off-bg);color:var(--off-tx);border:1px solid var(--off-bd);letter-spacing:2px;}
+.day-off-label{padding:8px 15px 11px;font-size:9px;letter-spacing:2px;color:var(--off-tx);text-transform:uppercase;}
+.slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:0 15px 11px;}
+.slot-btn{height:44px;border-radius:6px;border:1px solid var(--bd);background:var(--sur);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background .15s,border-color .15s,transform .1s;-webkit-user-select:none;user-select:none;}
+.slot-btn:active{transform:scale(.95);}
+.slot-btn.available{background:var(--op-bg);border-color:var(--op-bd);}
+.slot-btn.booked{background:var(--bk-bg);border-color:var(--bk-bd);}
+.slot-time{font-size:11px;font-weight:400;letter-spacing:.5px;font-variant-numeric:tabular-nums;line-height:1;color:var(--t1);transition:color .15s;}
+.slot-btn.available .slot-time{color:var(--op-tx);}
+.slot-btn.booked .slot-time{color:var(--bk-tx);}
+.slot-tag{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;opacity:.6;line-height:1;}
+.slot-btn.available .slot-tag{color:var(--op-tx);}
+.slot-btn.booked .slot-tag{color:var(--bk-tx);}
+
+/* ── FOOTER ─────────────────────────────────── */
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--bd);padding:9px 15px;padding-bottom:calc(9px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;z-index:50;transition:background .25s,border-color .25s;}
+.stats-row{display:flex;align-items:center;gap:12px;}
+.stat{display:flex;align-items:baseline;gap:5px;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;line-height:1;color:var(--t1);transition:color .25s;}
+.stat-num.hi{color:var(--ac);}
+.stat-label{font-size:8px;letter-spacing:1.5px;color:var(--tm);text-transform:uppercase;}
+.stat-div{width:1px;height:20px;background:var(--bd);}
+.actions{display:flex;gap:7px;}
+.btn{height:34px;padding:0 13px;border-radius:5px;border:1px solid var(--bd);background:transparent;color:var(--t2);font-family:'Noto Sans TC',sans-serif;font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .18s;white-space:nowrap;}
+.btn:active{background:var(--sur2);}
+.btn-primary{background:var(--ac);color:var(--acfg);border-color:var(--ac);}
+.btn-primary:active{opacity:.8;}
+
+/* ── EXPORT MODAL ───────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.modal-sheet{background:var(--sur);border-radius:18px 18px 0 0;width:100%;max-width:520px;padding:14px 18px 28px;padding-bottom:calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:14px;transform:translateY(40px);transition:transform .3s,background .25s;max-height:96dvh;overflow-y:auto;}
+.modal-overlay.show .modal-sheet{transform:translateY(0);}
+.sheet-handle{width:34px;height:4px;border-radius:2px;background:var(--bd);}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:4px;color:var(--t1);}
+
+/* ── EXPORT TABS ─────────────────────────────── */
+.ratio-tabs{display:flex;gap:7px;width:100%;}
+.ratio-tab{flex:1;height:36px;border-radius:6px;border:1px solid var(--bd);background:transparent;color:var(--t2);font-family:'Noto Sans TC',sans-serif;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
+.ratio-tab.active{background:var(--ac);color:var(--acfg);border-color:var(--ac);}
+.ratio-tab .ratio-icon{font-size:8px;opacity:.6;}
+.ratio-tab:active{opacity:.7;}
+
+/* ── CARD PREVIEW ────────────────────────────── */
+.card-wrap{display:flex;justify-content:center;width:100%;}
+
+/* Dynamic sizing handled by JS */
+#ig-story-card{
+  position:relative;overflow:hidden;
+  border-radius:10px;
+  box-shadow:0 14px 44px rgba(0,0,0,.35);
+  flex-shrink:0;
+}
+
+/* layers — 明確 z-index 確保文字永遠最上層 */
+.card-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;z-index:1;}
+.card-color-overlay{position:absolute;inset:0;transition:background .2s;z-index:2;}
+.card-color-filter{position:absolute;inset:0;transition:background .2s;z-index:3;pointer-events:none;}
+.card-content{position:absolute;inset:0;display:flex;flex-direction:column;z-index:10;}
+
+/* ── EXPORT CONTROLS ─────────────────────────── */
+.export-controls{width:100%;display:flex;flex-direction:column;gap:12px;}
+
+.ctrl-row{display:flex;align-items:center;gap:10px;}
+.ctrl-label{font-size:9px;letter-spacing:2px;color:var(--tm);text-transform:uppercase;min-width:52px;}
+
+/* File upload */
+.upload-btn{flex:1;height:32px;border-radius:5px;border:1px dashed var(--bd);background:var(--sur2);color:var(--t2);font-size:10px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .2s,background .2s;}
+.upload-btn:active{background:var(--bd);}
+.upload-btn.has-img{border-style:solid;border-color:var(--op-bd);color:var(--op-tx);}
+#bg-file-input{display:none;}
+
+/* Opacity slider */
+.slider{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--bd);outline:none;cursor:pointer;}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ac);box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.slider-val{font-size:10px;color:var(--t2);min-width:28px;text-align:right;font-variant-numeric:tabular-nums;}
+
+/* Color picker — rainbow border swatch */
+.color-picker-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.color-custom-wrap{position:relative;width:24px;height:24px;flex-shrink:0;}
+.color-custom{
+  width:24px;height:24px;border-radius:5px;
+  border:none;cursor:pointer;padding:0;
+  background:transparent;
+  /* Rainbow border via outline trick */
+  outline:2px solid transparent;
+  box-shadow:0 0 0 2px transparent;
+  position:relative;
+  -webkit-appearance:none;appearance:none;
+  overflow:hidden;
+}
+/* Wrap provides the rainbow ring */
+.color-custom-wrap::before{
+  content:'';
+  position:absolute;inset:-2px;
+  border-radius:7px;
+  background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);
+  z-index:0;
+}
+.color-custom-wrap::after{
+  content:'';
+  position:absolute;inset:2px;
+  border-radius:4px;
+  background:var(--sur);
+  z-index:1;
+  pointer-events:none;
+}
+.color-custom{position:relative;z-index:2;width:20px;height:20px;margin:2px;}
+
+/* fx-color also gets rainbow ring */
+.fx-color-wrap{position:relative;width:24px;height:24px;flex-shrink:0;}
+.fx-color-wrap::before{
+  content:'';
+  position:absolute;inset:-2px;
+  border-radius:7px;
+  background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);
+  z-index:0;
+}
+.fx-color-wrap::after{
+  content:'';
+  position:absolute;inset:2px;
+  border-radius:4px;
+  background:var(--sur);
+  z-index:1;
+  pointer-events:none;
+}
+.fx-color{
+  width:20px;height:20px;border-radius:4px;
+  border:none;cursor:pointer;padding:0;flex-shrink:0;
+  position:relative;z-index:2;margin:2px;
+  -webkit-appearance:none;appearance:none;overflow:hidden;
+}
+
+/* Color swatches */
+.color-swatch{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0;}
+.color-swatch.active{border-color:var(--t1);transform:scale(1.15);}
+.txt-color-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.txt-swatch{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;}
+.txt-swatch.active{border-color:var(--ac);transform:scale(1.15);}
+
+/* Font selector */
+.font-select{flex:1;height:32px;border-radius:5px;border:1px solid var(--bd);background:var(--sur);color:var(--t1);font-size:11px;padding:0 8px;outline:none;-webkit-appearance:none;cursor:pointer;}
+
+.modal-actions{display:flex;gap:8px;width:100%;}
+.modal-actions .btn{flex:1;display:flex;align-items:center;justify-content:center;}
+
+/* Shadow / stroke / filter toggles */
+.fx-row{display:flex;align-items:center;gap:8px;flex:1;}
+.fx-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-user-select:none;user-select:none;}
+.fx-toggle input[type=checkbox]{width:16px;height:16px;accent-color:var(--ac);cursor:pointer;flex-shrink:0;}
+.fx-toggle-label{font-size:10px;letter-spacing:1px;color:var(--t2);}
+.fx-slider{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--bd);outline:none;cursor:pointer;}
+.fx-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ac);box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.fx-val{font-size:10px;color:var(--t2);min-width:28px;text-align:right;font-variant-numeric:tabular-nums;}
+
+/* ── CARD INNER LAYOUT ───────────────────────── */
+.card-inner{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  padding:var(--cp,24px) var(--cp,20px);
+}
+.card-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:var(--brand-fs,18px);
+  letter-spacing:4px;
+  line-height:1;
+  margin-bottom:var(--gap-sm,10px);
+}
+.card-week{
+  font-size:var(--week-fs,8px);
+  letter-spacing:1.5px;
+  opacity:.55;
+  margin-bottom:var(--gap-sm,10px);
+}
+.card-hr{height:1px;background:currentColor;opacity:.12;margin-bottom:var(--gap-md,12px);}
+.card-days{display:flex;flex-direction:column;gap:var(--row-gap,7px);flex:1;overflow:hidden;}
+.card-day-row{display:flex;align-items:flex-start;gap:10px;}
+.card-day-lbl{font-size:var(--lbl-fs,8px);letter-spacing:2px;opacity:.35;min-width:24px;text-transform:uppercase;padding-top:1px;flex-shrink:0;}
+.card-day-times{font-size:var(--time-fs,9px);letter-spacing:.5px;opacity:.8;font-variant-numeric:tabular-nums;line-height:1.55;}
+.card-day-times.full{opacity:.22;font-size:var(--time-fs-sm,8px);letter-spacing:2px;}
+</style>
 </head>
-<body>
-  <h1>網站上線了</h1>
-  <div class="box">
-    <p>這是我的 GitHub Pages 測試頁。</p>
-    <p>如果你看到這頁，代表部署成功。</p>
+<body data-theme="light">
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="settings-drawer" id="settings-drawer">
+  <div class="drawer-header">
+    <div class="drawer-title">設定</div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
   </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <div class="ds-title">時段間隔</div>
+      <div class="seg-ctrl">
+        <button class="seg-opt" id="seg-30" onclick="setIntervalMode(30)">每半小時</button>
+        <button class="seg-opt active" id="seg-60" onclick="setIntervalMode(60)">每一小時</button>
+        <button class="seg-opt" id="seg-custom" onclick="setIntervalMode(0)">自訂</button>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="ds-title">時段列表</div>
+      <div class="time-list" id="time-list"></div>
+      <div class="add-time-row" id="custom-add-row" style="display:none">
+        <input type="time" class="time-input" id="new-time-input">
+        <button class="add-btn" onclick="addCustomTime()">＋ 新增</button>
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="ds-title">上班日　（主畫面雙擊標題亦可切換）</div>
+      <div class="day-toggles" id="day-toggles"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <button class="settings-btn" onclick="openDrawer()">⚙</button>
+  <div class="brand-name">Booking</div>
+  <div class="topbar-right">
+    <div class="theme-dots">
+      <div class="theme-dot dot-light active" onclick="setTheme('light',this)"></div>
+      <div class="theme-dot dot-noir"         onclick="setTheme('noir',this)"></div>
+      <div class="theme-dot dot-slate"        onclick="setTheme('slate',this)"></div>
+      <div class="theme-dot dot-sage"         onclick="setTheme('sage',this)"></div>
+      <div class="theme-dot dot-sand"         onclick="setTheme('sand',this)"></div>
+    </div>
+    <div class="week-nav">
+      <button class="wnav-btn" onclick="changeWeek(-1)">&#8249;</button>
+      <div class="week-label" id="week-label">—</div>
+      <button class="wnav-btn" onclick="changeWeek(1)">&#8250;</button>
+    </div>
+  </div>
+</header>
+
+<main class="main" id="main"></main>
+
+<div class="footer-bar">
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num hi" id="stat-open">—</div><div class="stat-label">空檔</div></div>
+    <div class="stat-div"></div>
+    <div class="stat"><div class="stat-num" id="stat-booked">—</div><div class="stat-label">已約</div></div>
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="resetWeek()">重置</button>
+    <button class="btn btn-primary" onclick="openModal()">匯出 Story</button>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="outsideClick(event)">
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="modal-title">匯出設計</div>
+
+    <!-- Ratio tabs -->
+    <div class="ratio-tabs">
+      <button class="ratio-tab active" data-ratio="916" onclick="setRatio('916',this)">
+        <span class="ratio-icon">▮</span>9:16
+      </button>
+      <button class="ratio-tab" data-ratio="11" onclick="setRatio('11',this)">
+        <span class="ratio-icon">■</span>1:1
+      </button>
+      <button class="ratio-tab" data-ratio="169" onclick="setRatio('169',this)">
+        <span class="ratio-icon">▬</span>16:9
+      </button>
+      <button class="ratio-tab" data-ratio="619" onclick="setRatio('619',this)">
+        <span class="ratio-icon">▯</span>6:19
+      </button>
+    </div>
+
+    <!-- Card preview -->
+    <div class="card-wrap">
+      <div id="ig-story-card">
+        <div class="card-bg-img" id="card-bg-img"></div>
+        <div class="card-color-overlay" id="card-color-overlay"></div>
+        <div class="card-color-filter" id="card-color-filter"></div>
+        <div class="card-content" id="card-content">
+          <div class="card-inner" id="card-inner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="export-controls">
+
+      <!-- BG upload -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">背景圖</div>
+        <div class="upload-btn" id="upload-btn-label" onclick="document.getElementById('bg-file-input').click()">
+          ＋ 上傳圖片
+        </div>
+        <input type="file" id="bg-file-input" accept="image/*" onchange="onBgUpload(event)">
+        <button class="btn" onclick="clearBg()" style="padding:0 10px;flex-shrink:0;height:32px;">清除</button>
+      </div>
+
+      <!-- Overlay opacity -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">遮罩濃度</div>
+        <input type="range" class="slider" id="opacity-slider" min="0" max="100" value="60" oninput="updateOverlayOpacity(this.value)">
+        <div class="slider-val" id="opacity-val">60%</div>
+      </div>
+
+      <!-- Overlay color -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">遮罩色</div>
+        <div class="color-picker-row" id="overlay-colors"></div>
+      </div>
+
+      <!-- Color filter (new independent layer) -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">色彩濾鏡</div>
+        <div class="fx-row">
+          <label class="fx-toggle">
+            <input type="checkbox" id="filter-on" onchange="toggleFilter(this.checked)">
+            <span class="fx-toggle-label">開啟</span>
+          </label>
+          <div class="fx-color-wrap"><input type="color" class="fx-color" id="filter-color" value="#c9a96e" oninput="updateFilter()" title="濾鏡顏色"></div>
+          <input type="range" class="fx-slider" id="filter-opacity" min="0" max="100" value="30" oninput="updateFilter();document.getElementById('filter-opacity-val').textContent=this.value+'%'">
+          <div class="fx-val" id="filter-opacity-val">30%</div>
+        </div>
+      </div>
+
+      <!-- Font -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">字體</div>
+        <select class="font-select" id="font-select" onchange="updateFont(this.value)">
+          <option value="'Bebas Neue', sans-serif" data-body="'Noto Sans TC', sans-serif">Bebas Neue + Noto Sans</option>
+          <option value="'Noto Serif TC', serif" data-body="'Noto Serif TC', serif">思源宋體</option>
+          <option value="'Noto Sans TC', sans-serif" data-body="'Noto Sans TC', sans-serif">思源黑體</option>
+          <option value="'LXGW WenKai TC', cursive" data-body="'LXGW WenKai TC', cursive">霞鶩文楷</option>
+          <option value="'Zen Old Mincho', serif" data-body="'Zen Old Mincho', serif">Zen 明朝</option>
+          <option value="'Cormorant Garamond', serif" data-body="'Noto Sans TC', sans-serif">Cormorant + Noto</option>
+        </select>
+      </div>
+
+      <!-- Text color -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">文字色</div>
+        <div class="txt-color-row" id="txt-colors"></div>
+      </div>
+
+      <!-- Text shadow -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">文字陰影</div>
+        <div class="fx-row">
+          <label class="fx-toggle">
+            <input type="checkbox" id="shadow-on" onchange="toggleShadow(this.checked)">
+            <span class="fx-toggle-label">開啟</span>
+          </label>
+          <div class="fx-color-wrap"><input type="color" class="fx-color" id="shadow-color" value="#000000" oninput="updateShadow()" title="陰影顏色"></div>
+          <input type="range" class="fx-slider" id="shadow-blur" min="0" max="40" value="12" oninput="updateShadow();document.getElementById('shadow-blur-val').textContent=this.value">
+          <div class="fx-val" id="shadow-blur-val">12</div>
+        </div>
+      </div>
+
+      <!-- Text stroke -->
+      <div class="ctrl-row">
+        <div class="ctrl-label">文字輪廓</div>
+        <div class="fx-row">
+          <label class="fx-toggle">
+            <input type="checkbox" id="stroke-on" onchange="toggleStroke(this.checked)">
+            <span class="fx-toggle-label">開啟</span>
+          </label>
+          <div class="fx-color-wrap"><input type="color" class="fx-color" id="stroke-color" value="#000000" oninput="updateStroke()" title="輪廓顏色"></div>
+          <input type="range" class="fx-slider" id="stroke-width" min="1" max="12" value="2" oninput="updateStroke();document.getElementById('stroke-width-val').textContent=this.value">
+          <div class="fx-val" id="stroke-width-val">2</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">關閉</button>
+      <button class="btn btn-primary" id="dl-btn" onclick="downloadStory()">儲存圖片</button>
+    </div>
+  </div>
+</div>
+
+<!-- 儲存圖片 lightbox（iOS 長按 / 電腦點下載） -->
+<div id="ios-lb" style="
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.94);
+  flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+
+  <!-- 說明文字（iOS / 非iOS 分別顯示） -->
+  <div id="lb-hint-ios" style="display:none;text-align:center;line-height:1.8">
+    <div style="font-size:22px;margin-bottom:4px">👇</div>
+    <div style="font-size:13px;letter-spacing:1px;color:rgba(255,255,255,.9);font-family:'Noto Sans TC',sans-serif">長按圖片</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.45);letter-spacing:1px;margin-top:2px">選「儲存到照片」存入相簿</div>
+  </div>
+  <div id="lb-hint-desktop" style="display:none;text-align:center;line-height:1.8">
+    <div style="font-size:13px;letter-spacing:1px;color:rgba(255,255,255,.9);font-family:'Noto Sans TC',sans-serif">點下方按鈕下載圖片</div>
+  </div>
+
+  <!-- 預覽圖 -->
+  <img id="ios-img" src="" alt="預覽" style="
+    max-width:82vw;max-height:60vh;
+    border-radius:10px;
+    box-shadow:0 12px 48px rgba(0,0,0,.6);
+    display:block;">
+
+  <!-- 電腦版：直接下載按鈕 -->
+  <a id="lb-download-btn" href="" download="" style="
+    display:none;
+    padding:12px 32px;border-radius:8px;
+    background:#ffffff;color:#111;
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:13px;letter-spacing:1px;
+    text-decoration:none;font-weight:500;">
+    ↓ 下載圖片
+  </a>
+
+  <!-- 關閉 -->
+  <button onclick="document.getElementById('ios-lb').style.display='none'" style="
+    margin-top:4px;padding:8px 24px;
+    border-radius:20px;border:1px solid rgba(255,255,255,.25);
+    background:transparent;color:rgba(255,255,255,.5);
+    font-size:11px;letter-spacing:1px;cursor:pointer;
+    font-family:'Noto Sans TC',sans-serif;">關閉</button>
+</div>
+
+<script>
+/* ── DATA ──────────────────────────────────── */
+const DAYS_EN=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+const DAYS_ZH=['週一','週二','週三','週四','週五','週六','週日'];
+let times=['11:30','12:30','13:30','14:30','15:30','16:30','17:30','18:30'];
+let dayActive=[false,true,true,true,true,true,true]; // 週一休息，週二～週日上班
+let weekOffset=0;
+let slotState={};
+let intervalMode=60;
+let lastTap={};
+
+/* export state */
+let currentRatio='916';
+let bgDataUrl='';
+let overlayColor='#000000';
+let overlayOpacity=60;
+let cardFont="'Bebas Neue', sans-serif";
+let cardBodyFont="'Noto Sans TC', sans-serif";
+let textColor='#ffffff';
+let shadowOn=false;
+let shadowColor='#000000';
+let shadowBlur=12;
+let strokeOn=false;
+let strokeColor='#000000';
+let strokeWidth=2;
+let filterOn=false;
+let filterColor='#c9a96e';
+let filterOpacity=30;
+
+const OVERLAY_COLORS=[
+  {c:'#000000',label:'黑'},{c:'#1a1714',label:'深棕'},{c:'#1e2430',label:'深藍'},
+  {c:'#182018',label:'深綠'},{c:'#3d1a0a',label:'深紅'},{c:'#f5f3ef',label:'白'},
+  {c:'#c9a96e',label:'金'},{c:'#8b6020',label:'琥珀'},
+];
+const TEXT_COLORS=[
+  {c:'#ffffff'},{c:'#f4f2ee'},{c:'#c9a96e'},{c:'#a8d5b5'},{c:'#b0c8d8'},{c:'#000000'},{c:'#1a1714'},
+];
+
+/* ratio configs: [previewW, previewH, exportW, exportH] */
+const RATIOS={
+  '916':{pw:240,ph:427,ew:1080,eh:1920,label:'9:16 Story'},
+  '11' :{pw:300,ph:300,ew:1080,eh:1080,label:'1:1 方形'},
+  '169':{pw:320,ph:180,ew:1920,eh:1080,label:'16:9 橫幅'},
+  '619':{pw:200,ph:633,ew:640,eh:2027,label:'6:19 長圖'},
+};
+
+/* ── WEEK HELPERS ──────────────────────────── */
+/* ── WEEK HELPERS ─────────────────────────────
+   使用固定基準錨點計算週一，不受裝置地區設定、
+   DST 日光節約時間、閏年（366天）影響。
+   基準：2024-01-01 是週一，以此為錨點往前後推算。
+────────────────────────────────────────────── */
+const _ANCHOR = Date.UTC(2024,0,1); // 2024/1/1 週一 UTC 毫秒
+const _DAY_MS = 86400000;
+const _WEEK_MS = 7 * _DAY_MS;
+
+function _todayMidnightLocal(){
+  const n=new Date();
+  return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
+}
+
+function getMonday(o){
+  // 以今天本地日期的UTC零時為基準，算出距錨點幾週，取週一
+  const todayUTC = _todayMidnightLocal();
+  const diffDays = Math.round((todayUTC - _ANCHOR) / _DAY_MS);
+  // 錨點是週一(0)，所以 diffDays%7 就是今天是週幾(0=週一)
+  const dowFromMon = ((diffDays % 7) + 7) % 7;
+  const thisMondayUTC = todayUTC - dowFromMon * _DAY_MS + o * _WEEK_MS;
+  // 轉回本地 Date，確保年月日正確
+  const t = new Date(thisMondayUTC);
+  return new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(), 0, 0, 0, 0);
+}
+
+function getWeekDates(o){
+  const m=getMonday(o);
+  return Array.from({length:7},(_,i)=>{
+    // 用 UTC 偏移構建，避免 DST 導致某天重複或跳過
+    const ms = Date.UTC(m.getFullYear(), m.getMonth(), m.getDate()) + i*_DAY_MS;
+    const t = new Date(ms);
+    return new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(), 12, 0, 0, 0);
+  });
+}
+
+function isToday(d){
+  const n=new Date();
+  return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate();
+}
+
+function fmt(d){return `${d.getMonth()+1}/${d.getDate()}`;}
+function weekKey(){const d=getWeekDates(weekOffset);return `${d[0].getFullYear()}-W${String(d[0].getMonth()+1).padStart(2,'0')}${String(d[0].getDate()).padStart(2,'0')}`;}
+function sk(di,ti){return `${weekKey()}|${di}-${ti}`;}
+function getSlot(di,ti){return slotState[sk(di,ti)]??'available';}
+
+/* ── SLOT ──────────────────────────────────── */
+function toggleSlot(di,ti){
+  if(!dayActive[di])return;
+  const k=sk(di,ti);
+  slotState[k]=(slotState[k]??'available')==='available'?'booked':'available';
+  updateSlotBtn(di,ti);updateDayBadge(di);updateStats();
+}
+function updateSlotBtn(di,ti){
+  const btn=document.getElementById(`s-${di}-${ti}`);if(!btn)return;
+  const s=getSlot(di,ti);
+  btn.className=`slot-btn ${s}`;
+  btn.innerHTML=`<div class="slot-time">${times[ti]}</div><div class="slot-tag">${s==='available'?'Open':'Booked'}</div>`;
+}
+
+/* ── DAY DOUBLE-TAP ──────────────────────── */
+function handleDayHeaderTap(di){
+  const now=Date.now();
+  if(lastTap[di]&&now-lastTap[di]<400){
+    dayActive[di]=!dayActive[di];renderDaySection(di);renderDrawerDayToggles();updateStats();lastTap[di]=0;
+  }else{lastTap[di]=now;}
+}
+function updateDayBadge(di){
+  const b=document.getElementById(`db-${di}`);if(!b)return;
+  if(!dayActive[di]){b.className='day-badge off';b.textContent='休假';return;}
+  const open=times.filter((_,ti)=>getSlot(di,ti)==='available').length;
+  if(open===0){b.className='day-badge full';b.textContent='全滿';}
+  else{b.className='day-badge has-open';b.textContent=`${open} 空檔`;}
+}
+
+/* ── RENDER MAIN ─────────────────────────── */
+function render(){
+  const dates=getWeekDates(weekOffset);
+  document.getElementById('week-label').textContent=`${fmt(dates[0])} — ${fmt(dates[6])}`;
+  const main=document.getElementById('main');main.innerHTML='';
+  for(let di=0;di<7;di++)renderDaySection(di,dates[di],main);
+  updateStats();
+}
+function renderDaySection(di,date,container){
+  const dates=getWeekDates(weekOffset);
+  const d=date||dates[di];const parent=container||document.getElementById('main');
+  const existing=document.getElementById(`day-sec-${di}`);
+  const sec=document.createElement('div');
+  sec.className='day-section'+(isToday(d)?' day-today':'')+(dayActive[di]?'':' day-off');
+  sec.id=`day-sec-${di}`;
+  const hdr=document.createElement('div');
+  hdr.className='day-header-row';
+  hdr.innerHTML=`<div class="day-num">${d.getDate()}</div><div class="day-name">${DAYS_EN[di]}</div><div class="day-badge" id="db-${di}"></div>`;
+  hdr.addEventListener('click',()=>handleDayHeaderTap(di));
+  sec.appendChild(hdr);
+  if(!dayActive[di]){
+    const lbl=document.createElement('div');lbl.className='day-off-label';lbl.textContent='休假';sec.appendChild(lbl);
+  }else{
+    const grid=document.createElement('div');grid.className='slots-grid';
+    times.forEach((_,ti)=>{
+      const s=getSlot(di,ti);const btn=document.createElement('button');
+      btn.id=`s-${di}-${ti}`;btn.className=`slot-btn ${s}`;
+      btn.innerHTML=`<div class="slot-time">${times[ti]}</div><div class="slot-tag">${s==='available'?'Open':'Booked'}</div>`;
+      btn.onclick=()=>toggleSlot(di,ti);grid.appendChild(btn);
+    });sec.appendChild(grid);
+  }
+  if(existing)parent.replaceChild(sec,existing);else parent.appendChild(sec);
+  updateDayBadge(di);
+}
+function updateStats(){
+  let open=0,booked=0;
+  for(let di=0;di<7;di++){if(!dayActive[di])continue;for(let ti=0;ti<times.length;ti++)getSlot(di,ti)==='available'?open++:booked++;}
+  document.getElementById('stat-open').textContent=open;
+  document.getElementById('stat-booked').textContent=booked;
+}
+function changeWeek(d){weekOffset+=d;render();}
+function resetWeek(){if(!confirm('確定重置本週？'))return;for(let di=0;di<7;di++)for(let ti=0;ti<times.length;ti++)delete slotState[sk(di,ti)];render();}
+
+/* ── THEME ─────────────────────────────────── */
+function setTheme(theme,dot){
+  document.body.setAttribute('data-theme',theme);
+  document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));
+  dot.classList.add('active');
+}
+
+/* ── DRAWER ────────────────────────────────── */
+function openDrawer(){document.getElementById('settings-drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('show');}
+function closeDrawer(){document.getElementById('settings-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('show');}
+
+function setIntervalMode(mins){
+  intervalMode=mins;
+  ['30','60','custom'].forEach(id=>document.getElementById(`seg-${id}`).classList.remove('active'));
+  if(mins===30){document.getElementById('seg-30').classList.add('active');times=['11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];}
+  else if(mins===60){document.getElementById('seg-60').classList.add('active');times=['11:30','12:30','13:30','14:30','15:30','16:30','17:30','18:30'];}
+  else document.getElementById('seg-custom').classList.add('active');
+  renderTimeList();render();
+}
+function renderTimeList(){
+  times.sort();const list=document.getElementById('time-list');list.innerHTML='';
+  times.forEach((t,i)=>{const row=document.createElement('div');row.className='time-row';row.innerHTML=`<div class="time-row-label">${t}</div><button class="time-row-del" onclick="deleteTime(${i})">✕</button>`;list.appendChild(row);});
+  document.getElementById('custom-add-row').style.display=intervalMode===0?'flex':'none';
+}
+function deleteTime(i){times.splice(i,1);renderTimeList();render();}
+function addCustomTime(){const v=document.getElementById('new-time-input').value;if(!v)return;if(!times.includes(v)){times.push(v);times.sort();}document.getElementById('new-time-input').value='';renderTimeList();render();}
+function renderDrawerDayToggles(){
+  const wrap=document.getElementById('day-toggles');wrap.innerHTML='';
+  DAYS_ZH.forEach((name,di)=>{
+    const row=document.createElement('div');row.className='day-toggle-row'+(dayActive[di]?' on':'');
+    row.innerHTML=`<div class="day-toggle-label">${name}</div><div class="day-toggle-switch"></div>`;
+    row.onclick=()=>{dayActive[di]=!dayActive[di];row.classList.toggle('on',dayActive[di]);renderDaySection(di);updateStats();};
+    wrap.appendChild(row);
+  });
+}
+
+/* ── MODAL ─────────────────────────────────── */
+function openModal(){buildCard();document.getElementById('modal-overlay').classList.add('show');}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('show');}
+function outsideClick(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+
+/* ── RATIO ─────────────────────────────────── */
+function setRatio(ratio,btn){
+  currentRatio=ratio;
+  document.querySelectorAll('.ratio-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  applyCardSize();buildCardInner();
+}
+
+function applyCardSize(){
+  const r=RATIOS[currentRatio];
+  const card=document.getElementById('ig-story-card');
+  card.style.width=r.pw+'px';card.style.height=r.ph+'px';
+}
+
+/* ── CARD BUILD ─────────────────────────────── */
+function buildCard(){applyCardSize();applyCardStyle();buildCardInner();}
+
+function applyCardStyle(){
+  // 層1：背景圖
+  const bgEl=document.getElementById('card-bg-img');
+  if(bgDataUrl){
+    bgEl.style.background=`url(${bgDataUrl}) center/cover no-repeat`;
+  }else{
+    // 無背景圖時底色用遮罩色本身（100% 實心），和 Canvas 保持一致
+    bgEl.style.background=overlayColor;
+  }
+
+  // 層2：遮罩（overlayColor + overlayOpacity）
+  // 有背景圖時：遮罩疊在圖片上
+  // 無背景圖時：底色已是遮罩色，這層設為透明（避免雙重疊色）
+  const ov=document.getElementById('card-color-overlay');
+  if(bgDataUrl){
+    const r=parseInt(overlayColor.slice(1,3),16);
+    const g=parseInt(overlayColor.slice(3,5),16);
+    const b=parseInt(overlayColor.slice(5,7),16);
+    ov.style.background=`rgba(${r},${g},${b},${overlayOpacity/100})`;
+  }else{
+    // 無背景圖：底色已是遮罩色實心，用 opacity 模擬濃淡
+    // 底色是100%，疊一層同色 overlay 讓使用者感受到濃度調整
+    // 實際用白色 or 黑色混合來模擬淡入淡出
+    const r=parseInt(overlayColor.slice(1,3),16);
+    const g=parseInt(overlayColor.slice(3,5),16);
+    const b=parseInt(overlayColor.slice(5,7),16);
+    // 濃度 < 50% 時往白混，> 50% 時往黑混，讓滑桿有感
+    const mid=overlayOpacity/100;
+    ov.style.background=mid<0.5
+      ? `rgba(255,255,255,${(0.5-mid)*0.6})`
+      : `rgba(${r},${g},${b},${(mid-0.5)*0.5})`;
+  }
+
+  // 層3：色彩濾鏡（獨立）
+  const fl=document.getElementById('card-color-filter');
+  if(filterOn){
+    const fr=parseInt(filterColor.slice(1,3),16);
+    const fg=parseInt(filterColor.slice(3,5),16);
+    const fb=parseInt(filterColor.slice(5,7),16);
+    fl.style.background=`rgba(${fr},${fg},${fb},${filterOpacity/100})`;
+  }else{
+    fl.style.background='transparent';
+  }
+
+  // 層4：文字（z-index:10 永遠最上）
+  const inner=document.getElementById('card-inner');
+  inner.style.color=textColor;
+  inner.style.fontFamily=cardBodyFont;
+  inner.style.textShadow=shadowOn
+    ? `0 2px ${shadowBlur}px ${shadowColor}, 0 0 ${Math.round(shadowBlur*0.5)}px ${shadowColor}`
+    : 'none';
+  inner.style.webkitTextStroke=strokeOn ? `${strokeWidth}px ${strokeColor}` : '0px transparent';
+  inner.style.paintOrder='stroke fill';
+}
+
+function buildCardInner(){
+  const dates=getWeekDates(weekOffset);
+  const ratio=RATIOS[currentRatio];
+  const isWide=currentRatio==='169';
+  const isTall=currentRatio==='619';
+  const isSquare=currentRatio==='11';
+
+  // scale vars by ratio
+  const inner=document.getElementById('card-inner');
+  if(isWide){
+    inner.style.setProperty('--cp','14px');inner.style.setProperty('--brand-fs','22px');
+    inner.style.setProperty('--week-fs','8px');inner.style.setProperty('--gap-sm','6px');
+    inner.style.setProperty('--gap-md','8px');inner.style.setProperty('--row-gap','5px');
+    inner.style.setProperty('--lbl-fs','7px');inner.style.setProperty('--time-fs','9px');
+    inner.style.setProperty('--time-fs-sm','7px');
+    // horizontal layout for 16:9
+    inner.style.flexDirection='row';inner.style.gap='18px';inner.style.alignItems='flex-start';
+  } else {
+    inner.style.flexDirection='column';inner.style.gap='';inner.style.alignItems='';
+    if(isTall){
+      inner.style.setProperty('--cp','18px');inner.style.setProperty('--brand-fs','14px');
+      inner.style.setProperty('--week-fs','7px');inner.style.setProperty('--gap-sm','8px');
+      inner.style.setProperty('--gap-md','10px');inner.style.setProperty('--row-gap','8px');
+      inner.style.setProperty('--lbl-fs','7px');inner.style.setProperty('--time-fs','9px');
+      inner.style.setProperty('--time-fs-sm','7px');
+    } else {
+      inner.style.setProperty('--cp',isSquare?'22px':'22px');
+      inner.style.setProperty('--brand-fs',isSquare?'18px':'17px');
+      inner.style.setProperty('--week-fs','8px');inner.style.setProperty('--gap-sm','9px');
+      inner.style.setProperty('--gap-md','11px');inner.style.setProperty('--row-gap','7px');
+      inner.style.setProperty('--lbl-fs','8px');inner.style.setProperty('--time-fs','9px');
+      inner.style.setProperty('--time-fs-sm','7px');
+    }
+  }
+
+  const activeDays=[];
+  for(let di=0;di<7;di++){if(dayActive[di])activeDays.push(di);}
+
+  let html=`
+    <div>
+      <div class="card-brand" style="font-family:${cardFont}">${escHtml(brandName)}</div>
+      <div class="card-week">${fmt(dates[0])} — ${fmt(dates[6])}</div>
+      <div class="card-hr"></div>
+    </div>
+    <div class="card-days" style="${isWide?'flex:1':''}">
+  `;
+
+  activeDays.forEach(di=>{
+    const openTimes=times.filter((_,ti)=>getSlot(di,ti)==='available');
+    const isFull=openTimes.length===0;
+    html+=`<div class="card-day-row">
+      <div class="card-day-lbl">${DAYS_ZH[di]}</div>
+      <div class="card-day-times${isFull?' full':''}">${isFull?'FULL':openTimes.join('  ·  ')}</div>
+    </div>`;
+  });
+
+  html+=`</div>`;
+  inner.innerHTML=html;
+  applyCardStyle();
+}
+
+let brandName='STUDIO';
+
+/* ── BG / STYLE CONTROLS ────────────────────── */
+function onBgUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    bgDataUrl=ev.target.result;
+    document.getElementById('upload-btn-label').textContent='✓ 已上傳';
+    document.getElementById('upload-btn-label').classList.add('has-img');
+    applyCardStyle();
+  };reader.readAsDataURL(file);
+}
+function clearBg(){
+  bgDataUrl='';
+  document.getElementById('upload-btn-label').textContent='＋ 上傳圖片';
+  document.getElementById('upload-btn-label').classList.remove('has-img');
+  document.getElementById('bg-file-input').value='';
+  applyCardStyle();
+}
+
+function updateOverlayOpacity(v){
+  overlayOpacity=parseInt(v);
+  document.getElementById('opacity-val').textContent=v+'%';
+  applyCardStyle();
+}
+
+function updateFont(val){
+  cardFont=val;
+  const opt=document.querySelector(`#font-select option[value="${CSS.escape(val)}"]`);
+  cardBodyFont=opt?opt.dataset.body:val;
+  buildCardInner();
+}
+
+function buildColorSwatches(){
+  // Helper: make a rainbow color-custom-wrap and insert at position 0
+  function makeRainbowPicker(container, defaultVal, onChangeFn){
+    const wrap=document.createElement('div');
+    wrap.className='color-custom-wrap';
+    const inp=document.createElement('input');
+    inp.type='color';inp.className='color-custom';inp.value=defaultVal;
+    inp.title='任意顏色';
+    inp.oninput=()=>{
+      container.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+      onChangeFn(inp.value);
+    };
+    wrap.appendChild(inp);
+    return wrap;
+  }
+
+  // ── 遮罩色 ──
+  const oc=document.getElementById('overlay-colors');oc.innerHTML='';
+  // 1. Rainbow picker FIRST
+  oc.appendChild(makeRainbowPicker(oc,'#000000',v=>{overlayColor=v;applyCardStyle();}));
+  // 2. Preset swatches
+  OVERLAY_COLORS.forEach((item,i)=>{
+    const sw=document.createElement('div');
+    sw.className='color-swatch'+(i===0?' active':'');
+    sw.style.background=item.c;
+    if(item.c==='#f5f3ef'||item.c==='#ffffff')sw.style.boxShadow='0 0 0 1px #ccc';
+    sw.title=item.label;
+    sw.onclick=()=>{
+      overlayColor=item.c;
+      oc.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+      sw.classList.add('active');
+      // sync rainbow picker colour
+      oc.querySelector('.color-custom').value=item.c;
+      applyCardStyle();
+    };
+    oc.appendChild(sw);
+  });
+
+  // ── 文字色 ──
+  const tc=document.getElementById('txt-colors');tc.innerHTML='';
+  // 1. Rainbow picker FIRST
+  tc.appendChild(makeRainbowPicker(tc,'#ffffff',v=>{textColor=v;applyCardStyle();}));
+  // 2. Preset swatches
+  TEXT_COLORS.forEach((item,i)=>{
+    const sw=document.createElement('div');
+    sw.className='txt-swatch'+(i===0?' active':'');
+    sw.style.background=item.c;
+    if(item.c==='#ffffff'||item.c==='#f4f2ee')sw.style.boxShadow='0 0 0 1px #ccc';
+    sw.onclick=()=>{
+      textColor=item.c;
+      tc.querySelectorAll('.txt-swatch').forEach(s=>s.classList.remove('active'));
+      sw.classList.add('active');
+      tc.querySelector('.color-custom').value=item.c;
+      applyCardStyle();
+    };
+    tc.appendChild(sw);
+  });
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ── TEXT FX ────────────────────────────────── */
+function toggleShadow(on){shadowOn=on;applyCardStyle();}
+function toggleStroke(on){strokeOn=on;applyCardStyle();}
+function updateShadow(){
+  shadowColor=document.getElementById('shadow-color').value;
+  shadowBlur=parseInt(document.getElementById('shadow-blur').value);
+  if(shadowOn)applyCardStyle();
+}
+function updateStroke(){
+  strokeColor=document.getElementById('stroke-color').value;
+  strokeWidth=parseInt(document.getElementById('stroke-width').value);
+  if(strokeOn)applyCardStyle();
+}
+function toggleFilter(on){filterOn=on;applyCardStyle();}
+function updateFilter(){
+  filterColor=document.getElementById('filter-color').value;
+  filterOpacity=parseInt(document.getElementById('filter-opacity').value);
+  applyCardStyle();
+}
+
+/* ── DOWNLOAD ───────────────────────────────── */
+/* ── DEVICE DETECT ──────────────────────────── */
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent)||
+    (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+}
+
+/* ── CANVAS RENDER ──────────────────────────── */
+async function renderToCanvas(){
+  const r=RATIOS[currentRatio];
+  const W=r.ew,H=r.eh;
+  const SCALE=2; // 2x 像素密度，輸出更清晰
+  const CW=W*SCALE, CH=H*SCALE;
+
+  const cvs=document.createElement('canvas');
+  cvs.width=CW; cvs.height=CH;
+  const ctx=cvs.getContext('2d');
+  ctx.scale(SCALE,SCALE); // 所有繪製指令仍用原始座標，自動放大
+
+  // ── 層1：底色 / 背景圖 ──────────────────────
+  const hexR=parseInt(overlayColor.slice(1,3),16);
+  const hexG=parseInt(overlayColor.slice(3,5),16);
+  const hexB=parseInt(overlayColor.slice(5,7),16);
+
+  if(bgDataUrl){
+    // 有背景圖：畫圖
+    await new Promise((res,rej)=>{
+      const img=new Image();
+      img.onload=()=>{
+        const iR=img.width/img.height,cR=W/H;
+        let sw,sh,sx,sy;
+        if(iR>cR){sh=img.height;sw=sh*cR;sx=(img.width-sw)/2;sy=0;}
+        else{sw=img.width;sh=sw/cR;sy=(img.height-sh)/2;sx=0;}
+        ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+        res();
+      };
+      img.onerror=rej;
+      img.src=bgDataUrl;
+    });
+
+    // ── 層2：遮罩（有圖時直接用 overlayOpacity）
+    ctx.fillStyle=`rgba(${hexR},${hexG},${hexB},${overlayOpacity/100})`;
+    ctx.fillRect(0,0,W,H);
+
+  }else{
+    // 無背景圖：底色 = 遮罩色實心（與預覽一致）
+    ctx.fillStyle=`rgb(${hexR},${hexG},${hexB})`;
+    ctx.fillRect(0,0,W,H);
+
+    // ── 層2：模擬濃淡（無背景圖時用白/遮罩色混合）
+    const mid=overlayOpacity/100;
+    if(mid<0.5){
+      ctx.fillStyle=`rgba(255,255,255,${(0.5-mid)*0.6})`;
+    }else{
+      ctx.fillStyle=`rgba(${hexR},${hexG},${hexB},${(mid-0.5)*0.5})`;
+    }
+    ctx.fillRect(0,0,W,H);
+  }
+
+  // ── 層3：色彩濾鏡（獨立，與預覽完全對應）
+  if(filterOn){
+    const fr=parseInt(filterColor.slice(1,3),16);
+    const fg=parseInt(filterColor.slice(3,5),16);
+    const fb=parseInt(filterColor.slice(5,7),16);
+    ctx.fillStyle=`rgba(${fr},${fg},${fb},${filterOpacity/100})`;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  // 3. Top accent line
+  const lg=ctx.createLinearGradient(W*0.1,0,W*0.9,0);
+  lg.addColorStop(0,'rgba(255,255,255,0)');
+  lg.addColorStop(0.5,'rgba(255,255,255,0.22)');
+  lg.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=lg;
+  ctx.fillRect(W*0.1,0,W*0.8,1);
+
+  // 4. Text — 固定字體大小，整體置中排版
+  const dates=getWeekDates(weekOffset);
+  const isWide=currentRatio==='169';
+
+  const brandFs = isWide ? 72 : 64;
+  const weekFs  = 32;
+  const lblFs   = 30;
+  const timeFs  = 34;
+  const lineH   = Math.round(timeFs * 2.6);
+  const PAD     = Math.round(W * 0.1);   // 左右留 10% 邊距
+  const CONT_W  = W - PAD * 2;           // 可用內容寬度
+  const lblW    = Math.round(CONT_W * 0.18); // 週X 欄寬 18%
+
+  ctx.textBaseline='top';
+
+  // 設定陰影（全域，所有文字共用）
+  if(shadowOn){
+    const sr=parseInt(shadowColor.slice(1,3),16);
+    const sg=parseInt(shadowColor.slice(3,5),16);
+    const sb=parseInt(shadowColor.slice(5,7),16);
+    ctx.shadowColor=`rgba(${sr},${sg},${sb},0.85)`;
+    ctx.shadowBlur=shadowBlur*2; // canvas shadowBlur 單位較小，乘2讓視覺接近預覽
+    ctx.shadowOffsetX=0;
+    ctx.shadowOffsetY=Math.round(shadowBlur*0.3);
+  }else{
+    ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetX=0;ctx.shadowOffsetY=0;
+  }
+
+  // 輔助函式：畫文字（含輪廓）
+  function drawText(text,x,y){
+    if(strokeOn){
+      ctx.save();
+      ctx.shadowColor='transparent';ctx.shadowBlur=0; // 輪廓不加陰影，避免重疊
+      ctx.strokeStyle=strokeColor;
+      ctx.lineWidth=strokeWidth*2;
+      ctx.lineJoin='round';
+      ctx.strokeText(text,x,y);
+      ctx.restore();
+    }
+    ctx.fillText(text,x,y);
+  }
+
+  // brand
+  const ff=cardFont.replace(/'/g,'').split(',')[0].trim();
+  ctx.font=`600 ${brandFs}px '${ff}',sans-serif`;
+  ctx.fillStyle=textColor;ctx.globalAlpha=0.93;
+  drawText(brandName||'STUDIO', PAD, PAD);
+  ctx.globalAlpha=1;
+
+  // week range
+  ctx.font=`300 ${weekFs}px 'Noto Sans TC',sans-serif`;
+  ctx.fillStyle=textColor;ctx.globalAlpha=0.42;
+  const weekY=PAD+brandFs+Math.round(H*0.012);
+  drawText(`${fmt(dates[0])} — ${fmt(dates[6])}   ${dates[0].getFullYear()}`, PAD, weekY);
+  ctx.globalAlpha=1;
+
+  // hr
+  const hrY=weekY+weekFs+Math.round(H*0.018);
+  ctx.fillStyle=textColor;ctx.globalAlpha=0.1;
+  ctx.fillRect(PAD, hrY, CONT_W, 2);
+  ctx.globalAlpha=1;
+
+  // days
+  let curY=hrY+Math.round(H*0.022);
+
+  for(let di=0;di<7;di++){
+    if(!dayActive[di])continue;
+    const openTimes=times.filter((_,ti)=>getSlot(di,ti)==='available');
+    const isFull=openTimes.length===0;
+
+    // 週X label
+    ctx.font=`300 ${lblFs}px 'Noto Sans TC',sans-serif`;
+    ctx.fillStyle=textColor;ctx.globalAlpha=0.3;
+    drawText(DAYS_ZH[di], PAD, curY);
+
+    // 時段文字：自動切行，超出就換行
+    ctx.font=`300 ${timeFs}px 'Noto Sans TC',sans-serif`;
+    ctx.globalAlpha=isFull?0.2:0.75;
+    const timeX=PAD+lblW;
+    const maxW=CONT_W-lblW;
+
+    if(isFull){
+      drawText('FULL', timeX, curY);
+      curY+=lineH;
+    }else{
+      const sep=' · ';
+      let line='';
+      for(let i=0;i<openTimes.length;i++){
+        const candidate=line+(line?sep:'')+openTimes[i];
+        if(ctx.measureText(candidate).width>maxW && line){
+          drawText(line, timeX, curY);
+          curY+=lineH;
+          line=openTimes[i];
+        }else{
+          line=candidate;
+        }
+      }
+      if(line){drawText(line, timeX, curY);curY+=lineH;}
+    }
+    ctx.globalAlpha=1;
+    curY+=Math.round(H*0.004); // 每天間距
+  }
+
+  return cvs;
+}
+
+/* ── DOWNLOAD ───────────────────────────────── */
+async function downloadStory(){
+  const btn=document.getElementById('dl-btn');
+  btn.textContent='生成中…';btn.disabled=true;
+
+  try{
+    const cvs=await renderToCanvas();
+    const dataUrl=cvs.toDataURL('image/png');
+    const lb=document.getElementById('ios-lb');
+    const img=document.getElementById('ios-img');
+
+    img.src=dataUrl;
+    lb.style.display='flex';
+
+    if(isIOS()){
+      // iPhone：長按圖片存到相簿
+      document.getElementById('lb-hint-ios').style.display='block';
+      document.getElementById('lb-hint-desktop').style.display='none';
+      document.getElementById('lb-download-btn').style.display='none';
+    }else{
+      // 電腦 / Android：顯示下載按鈕
+      document.getElementById('lb-hint-ios').style.display='none';
+      document.getElementById('lb-hint-desktop').style.display='block';
+      const dlBtn=document.getElementById('lb-download-btn');
+      dlBtn.style.display='inline-block';
+      dlBtn.href=dataUrl;
+      dlBtn.download=`空檔_${RATIOS[currentRatio].label.replace(/[:\s]/g,'_')}_${weekKey()}.png`;
+    }
+
+    btn.textContent='儲存圖片';btn.disabled=false;
+
+  }catch(e){
+    console.error(e);
+    alert('儲存失敗，請再試一次');
+    btn.textContent='儲存圖片';btn.disabled=false;
+  }
+}
+
+/* ── INIT ───────────────────────────────────── */
+buildColorSwatches();
+renderTimeList();
+renderDrawerDayToggles();
+render();
+applyCardSize();
+</script>
 </body>
 </html>
